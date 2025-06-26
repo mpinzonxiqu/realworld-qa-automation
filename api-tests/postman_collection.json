@@ -1,0 +1,86 @@
+{
+  "info": {
+    "name": "RealWorld API Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Healthcheck",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/health"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"API está viva\", () => pm.response.code === 200);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "User registration",
+      "request": {
+        "method": "POST",
+        "header": [{"key":"Content-Type","value":"application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{
+  \"user\": {
+    \"username\": \"new_user\",
+    \"email\": \"{{email}}\",
+    \"password\": \"{{password}}\"
+  }
+}"
+        },
+        "url": "{{baseUrl}}/users"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Usuario creado\", () => pm.response.code === 201);",
+              "const data = pm.response.json();",
+              "pm.environment.set('token', data.user.token);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Article (auth)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key":"Content-Type","value":"application/json"},
+          {"key":"Authorization","value":"Token {{token}}"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{
+  \"article\": {
+    \"title\": \"API Test\",
+    \"description\": \"Article from Postman\",
+    \"body\": \"Hello world\"
+  }
+}"
+        },
+        "url": "{{baseUrl}}/articles"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Artículo creado\", () => pm.response.code === 201);"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
