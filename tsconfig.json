@@ -1,0 +1,11 @@
+{
+  "include": [
+    "actors/**/*.ts",
+    "abilities/**/*.ts",
+    "tasks/**/*.ts",
+    "questions/**/*.ts",
+    "utils/**/*.ts",          // 👈  asegúrate de tener esta línea
+    "features/**/*.ts",
+    "cucumber.ts"
+  ]
+}
